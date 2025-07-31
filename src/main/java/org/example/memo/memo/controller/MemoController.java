@@ -57,12 +57,21 @@ public class MemoController {
 
     }
 
+    // 메모 단건 전체 수정 기능
     @PutMapping("/{id}")
-    public MemoResponseDto updateMemoById(@PathVariable Long id, @RequestBody MemoRequestDto dto) {
+    public ResponseEntity <MemoResponseDto> updateMemoById(@PathVariable Long id, @RequestBody MemoRequestDto dto) {
         Memo memo = memoList.get(id);
+        if (memo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if(dto.getTitle()==null || dto.getContents()==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         memo.updata(dto);
 
-        return new MemoResponseDto(memo);
+        return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{id}")
