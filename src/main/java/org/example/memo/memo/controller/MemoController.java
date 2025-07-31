@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/memos") // prefix
@@ -33,6 +31,21 @@ public class MemoController {
         return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public List<MemoResponseDto> findAllMemos() {
+       //init  List 리스트는 인터페이스이기 때문에 구현체를 사용해서 초기화 해야함
+        List<MemoResponseDto> ResponseList = new ArrayList<>();
+
+       // HashMap<memo>-> List<MemoResponseDto>
+        for (Memo memo : memoList.values()) {
+             MemoResponseDto ResponseDto = new MemoResponseDto(memo);
+             ResponseList.add(ResponseDto);
+        }
+      //  ResponseList = memoList.values().stream().map(MemoResponseDto::new).toList();
+        return ResponseList;
+    }
+
+
     @GetMapping("/{id}")
     public MemoResponseDto findMemoById(@PathVariable Long id) {
         Memo memo = memoList.get(id);
@@ -47,6 +60,7 @@ public class MemoController {
 
         return new MemoResponseDto(memo);
     }
+
     @DeleteMapping("/{id}")
     public void deleteMemoById(@PathVariable Long id) {
         memoList.remove(id);
