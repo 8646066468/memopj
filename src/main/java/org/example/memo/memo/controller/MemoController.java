@@ -29,10 +29,19 @@ public class MemoController {
 
         return new MemoResponseDto(memo);
     }
+
     @GetMapping("/{id}")
     public MemoResponseDto findMemoById(@PathVariable Long id) {
         Memo memo = memoList.get(id);
         return new MemoResponseDto(memo);
 
+    }
+
+    @PutMapping("/{id}")
+    public MemoResponseDto updateMemoById(@PathVariable Long id, @RequestBody MemoRequestDto dto) {
+        Memo memo = memoList.get(id);
+        memo.updata(dto);
+
+        return new MemoResponseDto(memo);
     }
 }
