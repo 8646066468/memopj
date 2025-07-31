@@ -31,25 +31,29 @@ public class MemoController {
         return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.CREATED);
     }
 
+    //메모 전체 조회
     @GetMapping
     public List<MemoResponseDto> findAllMemos() {
-       //init  List 리스트는 인터페이스이기 때문에 구현체를 사용해서 초기화 해야함
+        //init  List 리스트는 인터페이스이기 때문에 구현체를 사용해서 초기화 해야함
         List<MemoResponseDto> ResponseList = new ArrayList<>();
 
-       // HashMap<memo>-> List<MemoResponseDto>
+        // HashMap<memo>-> List<MemoResponseDto>
         for (Memo memo : memoList.values()) {
-             MemoResponseDto ResponseDto = new MemoResponseDto(memo);
-             ResponseList.add(ResponseDto);
+            MemoResponseDto ResponseDto = new MemoResponseDto(memo);
+            ResponseList.add(ResponseDto);
         }
-      //  ResponseList = memoList.values().stream().map(MemoResponseDto::new).toList();
+        //  ResponseList = memoList.values().stream().map(MemoResponseDto::new).toList();
         return ResponseList;
     }
 
-
+    // 단건 조회
     @GetMapping("/{id}")
-    public MemoResponseDto findMemoById(@PathVariable Long id) {
+    public ResponseEntity<MemoResponseDto> findMemoById(@PathVariable Long id) {
         Memo memo = memoList.get(id);
-        return new MemoResponseDto(memo);
+        if (memo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
 
     }
 
